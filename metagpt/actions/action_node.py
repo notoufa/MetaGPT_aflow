@@ -597,7 +597,7 @@ class ActionNode:
     async def fill(
         self,
         *,
-        req,
+        context,
         llm,
         schema="json",
         mode="auto",
@@ -609,7 +609,7 @@ class ActionNode:
     ):
         """Fill the node(s) with mode.
 
-        :param req: Everything we should know when filling node.
+        :param context: Everything we should know when filling node.
         :param llm: Large Language Model with pre-defined system message.
         :param schema: json/markdown, determine example and output format.
          - raw: free form text
@@ -628,7 +628,7 @@ class ActionNode:
         :return: self
         """
         self.set_llm(llm)
-        self.set_context(req)
+        self.set_context(context)
         if self.schema:
             schema = self.schema
 
