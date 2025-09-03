@@ -1,8 +1,34 @@
 # Full Example: https://github.com/geekan/MetaGPT/blob/main/config/config2.example.yaml
 # Reflected Code: https://github.com/geekan/MetaGPT/blob/main/metagpt/config2.py
 # Config Docs: https://docs.deepwisdom.ai/main/en/guide/get_started/configuration.html
+# llm:
+#   api_type: 'spark'
+#   app_id: '222c9665'
+#   api_key: 'f3cf31b476298d0d9a225c3436029b4b'
+#   api_secret: 'ZjgxNzc1ZGVjMmJhNmI0MWU1MWQxNDdj'
+#   domain: '4.0Ultra'
+#   base_url: 'wss://spark-api.xf-yun.com/v4.0/chat'
+
+# llm:
+#   api_type: 'zhipuai'
+#   api_key: '2382f4dbe770f7ba29b5aa7704606bac.G9D8MinPcQooUOtA'
+#   model: 'glm-4-plus'
+
+# models:
+#  "glm-4-plus": # model: "gpt-4-turbo"  # or gpt-3.5-turbo
+#    api_type: "zhipuai"  # or azure / ollama / groq etc.
+#    api_key: "2382f4dbe770f7ba29b5aa7704606bac.G9D8MinPcQooUOtA"
+#    temperature: 0
+
 llm:
-  api_type: "openai"  # or azure / ollama / groq etc.
-  model: "gpt-4-turbo"  # or gpt-3.5-turbo
-  base_url: "https://api.openai.com/v1"  # or forward url / other llm url
-  api_key: "YOUR_API_KEY"
+  api_type: 'zhipuai'
+  api_key: '2382f4dbe770f7ba29b5aa7704606bac.G9D8MinPcQooUOtA'
+  model: 'glm-4-flash'
+  temperature: 0
+
+models:
+ "glm-4-flash": # model: "gpt-4-turbo"  # or gpt-3.5-turbo
+    api_type: 'zhipuai'
+    api_key: '2382f4dbe770f7ba29b5aa7704606bac.G9D8MinPcQooUOtA'
+    model: 'glm-4-flash'
+    temperature: 0

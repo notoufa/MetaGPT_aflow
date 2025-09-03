@@ -434,7 +434,7 @@ class ActionNode:
         system_msgs: Optional[list[str]] = None,
         schema="markdown",  # compatible to original format
         timeout=USE_CONFIG_TIMEOUT,
-    ) -> (str, BaseModel):
+    ) -> Tuple[str, BaseModel]:
         """Use ActionOutput to wrap the output of aask"""
         content = await self.llm.aask(prompt, system_msgs, images=images, timeout=timeout)
         logger.debug(f"llm raw output:\n{content}")
@@ -597,7 +597,7 @@ class ActionNode:
     async def fill(
         self,
         *,
-        req,
+        context,
         llm,
         schema="json",
         mode="auto",
@@ -609,7 +609,7 @@ class ActionNode:
     ):
         """Fill the node(s) with mode.
 
-        :param req: Everything we should know when filling node.
+        :param context: Everything we should know when filling node.
         :param llm: Large Language Model with pre-defined system message.
         :param schema: json/markdown, determine example and output format.
          - raw: free form text
@@ -628,7 +628,7 @@ class ActionNode:
         :return: self
         """
         self.set_llm(llm)
-        self.set_context(req)
+        self.set_context(context)
         if self.schema:
             schema = self.schema
 

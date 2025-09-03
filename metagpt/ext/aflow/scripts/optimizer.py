@@ -89,6 +89,7 @@ class Optimizer:
                     score = loop.run_until_complete(self._optimize_graph())
                     break
                 except Exception as e:
+                    print(f"Exception occurred: {e},存在异常，重试中...")
                     retry_count += 1
                     logger.info(f"Error occurred: {e}. Retrying... (Attempt {retry_count}/{max_retries})")
                     if retry_count == max_retries:
@@ -104,20 +105,20 @@ class Optimizer:
 
             self.round += 1
             logger.info(f"Score for round {self.round}: {score}")
-
-            converged, convergence_round, final_round = self.convergence_utils.check_convergence(top_k=3)
-
-            if converged and self.check_convergence:
-                logger.info(
-                    f"Convergence detected, occurred in round {convergence_round}, final round is {final_round}"
-                )
-                # Print average scores and standard deviations for each round
-                self.convergence_utils.print_results()
-                break
+            if self.check_convergence:
+                converged, convergence_round, final_round = self.convergence_utils.check_convergence(top_k=3)
+                if converged:
+                    logger.info(
+                        f"Convergence detected, occurred in round {convergence_round}, final round is {final_round}"
+                    )
+                    # Print average scores and standard deviations for each round
+                    self.convergence_utils.print_results()
+                    break
 
             time.sleep(5)
 
     async def _optimize_graph(self):
+        # 每次产生一个不重复的工作流
         validation_n = self.validation_rounds  # validation datasets's execution number
         graph_path = f"{self.root_path}/workflows"
         data = self.data_utils.load_results(graph_path)
@@ -125,30 +126,30 @@ class Optimizer:
         if self.round == 1:
             directory = self.graph_utils.create_round_directory(graph_path, self.round)
             # Load graph using graph_utils
-            self.graph = self.graph_utils.load_graph(self.round, graph_path)
-            avg_score = await self.evaluation_utils.evaluate_graph(self, directory, validation_n, data, initial=True)
+            self.graph = self.graph_utils.load_graph(self.round, graph_path)     # 加载工作流
+            avg_score = await self.evaluation_utils.evaluate_graph(self, directory, validation_n, data, initial=True)  # 第一轮评估
 
         # Create a loop until the generated graph meets the check conditions
         while True:
             directory = self.graph_utils.create_round_directory(graph_path, self.round + 1)
 
-            top_rounds = self.data_utils.get_top_rounds(self.sample)
-            sample = self.data_utils.select_round(top_rounds)
+            top_rounds = self.data_utils.get_top_rounds(self.sample)  #获得第一轮平均得分及得分最高的轮数，共sample个
+            sample = self.data_utils.select_round(top_rounds)#选择要优化的轮数
 
-            prompt, graph_load = self.graph_utils.read_graph_files(sample["round"], graph_path)
+            prompt, graph_load = self.graph_utils.read_graph_files(sample["round"], graph_path)  #读取工作流代码和prompt
             graph = self.graph_utils.extract_solve_graph(graph_load)
 
             processed_experience = self.experience_utils.load_experience()
             experience = self.experience_utils.format_experience(processed_experience, sample["round"])
 
-            operator_description = self.graph_utils.load_operators_description(self.operators)
-            log_data = self.data_utils.load_log(sample["round"])
+            operator_description = self.graph_utils.load_operators_description(self.operators)   #从operator.json中加载操作符描述
+            log_data = self.data_utils.load_log(sample["round"])  #从log.json中随机加载3条日志数据
 
-            graph_optimize_prompt = self.graph_utils.create_graph_optimize_prompt(
+            graph_optimize_prompt = self.graph_utils.create_graph_optimize_prompt(     # 创建工作流优化提示
                 experience, sample["score"], graph[0], prompt, operator_description, self.type, log_data
             )
 
-            graph_optimize_node = await ActionNode.from_pydantic(GraphOptimize).fill(
+            graph_optimize_node = await ActionNode.from_pydantic(GraphOptimize).fill(    # 用大模型进行工作流优化
                 context=graph_optimize_prompt, mode="xml_fill", llm=self.optimize_llm
             )
 
@@ -165,12 +166,12 @@ class Optimizer:
 
         # Save the graph and evaluate
         self.graph_utils.write_graph_files(directory, response, self.round + 1, self.dataset)
-
+        print(f"Graph for round {self.round + 1} has been saved to {directory}")
         experience = self.experience_utils.create_experience_data(sample, response["modification"])
 
         self.graph = self.graph_utils.load_graph(self.round + 1, graph_path)
 
-        logger.info(directory)
+        print("开始处理目录"+directory)
 
         avg_score = await self.evaluation_utils.evaluate_graph(self, directory, validation_n, data, initial=False)
 

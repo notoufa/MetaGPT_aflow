@@ -65,7 +65,7 @@ class ConvergenceUtils:
             stds.append(np.std(scores))
         return avg_scores, stds
 
-    def check_convergence(self, top_k=3, z=0, consecutive_rounds=5):
+    def check_convergence(self, top_k=3, z=0, consecutive_rounds=3):
         """
         Check for convergence. z is the z-score corresponding to the confidence level.
         consecutive_rounds is the number of consecutive rounds that must meet the stop condition.

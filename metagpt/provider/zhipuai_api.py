@@ -80,9 +80,9 @@ class ZhiPuAILLM(BaseLLM):
             else:
                 content = self.get_choice_delta_text(chunk)
                 collected_content.append(content)
-                log_llm_stream(content)
+        #         log_llm_stream(content)
 
-        log_llm_stream("\n")
+        # log_llm_stream("\n")
 
         self._update_costs(usage)
         full_content = "".join(collected_content)

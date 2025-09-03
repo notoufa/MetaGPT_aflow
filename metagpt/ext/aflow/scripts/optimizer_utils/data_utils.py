@@ -52,7 +52,7 @@ class DataUtils:
         sorted_items = sorted(items, key=lambda x: x["score"], reverse=True)
         scores = [item["score"] * 100 for item in sorted_items]
 
-        probabilities = self._compute_probabilities(scores)
+        probabilities = self._compute_probabilities(scores)  # 计算混合概率分布
         logger.info(f"\nMixed probability distribution: {probabilities}")
         logger.info(f"\nSorted rounds: {sorted_items}")
 

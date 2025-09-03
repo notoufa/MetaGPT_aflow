@@ -46,7 +46,9 @@ class GSM8KBenchmark(BaseBenchmark):
 
             if score == 0:
                 self.log_mismatch(input_text, expected_output, output, extracted_output)
-
+            print("-" * 50)
+            print(f"Input: {input_text}\n Output: {output}")
+            print("-" * 50)
             return input_text, output, expected_output, score, cost
 
         except Exception as e:
