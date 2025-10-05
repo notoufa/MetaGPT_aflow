@@ -475,7 +475,8 @@ class Role(BaseRole, SerializationMixin, ContextMixin, BaseModel):
             # create initial plan and update it until confirmation
             goal = self.rc.memory.get()[-1].content  # retreive latest user requirement
             await self.planner.update_plan(goal=goal)
-
+        # print the final plan
+        print(self.planner.plan.model_dump_json(indent=2))
         # take on tasks until all finished
         while self.planner.current_task:
             task = self.planner.current_task

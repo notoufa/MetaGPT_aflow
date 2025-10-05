@@ -226,6 +226,7 @@ def parse_prediction(prediction: str) -> dict:
               corresponding value, either as a float or a string.
     """
     pred_dict = {}
+    prediction = prediction.strip()
     for pred in prediction.split("@"):
         if pred == "":
             continue  # Skip any empty segments resulting from the split
@@ -393,8 +394,8 @@ class DABench:
 
         # If the cleaned prediction is not valid, attempt to asynchronously reformat it
         prediction = self.async_reformat_prediction(id, result)
-
         pred_dict = parse_prediction(prediction)  # Parse the reformatted prediction
+        logger.info(f"真实标签: {true_label}, 预测结果: {prediction}, 解析结果: {pred_dict}")  # Log the true label and prediction
         if pred_dict is not None and compare_predictions(pred_dict, true_label):
             return prediction, True  # Return if the reformatted prediction matches the true label
 
@@ -440,6 +441,7 @@ class DABench:
                     metric not in pred_dict or str(pred_dict[metric]).lower() != str(true_value).lower()
                 ):
                     correctness[metric] = True  # Mark as correct for string comparison
+                logger.info(f"Metric: {metric}, Predicted: {pred_dict[metric]}, True: {true_value}, Correct: {correctness[metric]}")
 
         return correctness  # Return the correctness dictionary
 

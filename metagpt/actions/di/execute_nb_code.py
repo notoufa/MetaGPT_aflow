@@ -70,14 +70,19 @@ class ExecuteNbCode(Action):
     """execute notebook code block, return result to llm, and display it."""
 
     nb: NotebookNode
-    nb_client: RealtimeOutputNotebookClient = None
+    nb_client: NotebookClient
     console: Console
     interaction: str
     timeout: int = 600
 
-    def __init__(self, nb=nbformat.v4.new_notebook(), timeout=600):
+    def __init__(
+        self,
+        nb=nbformat.v4.new_notebook(),
+        timeout=600,
+    ):
         super().__init__(
-            nb=nb,
+            nb=nbformat.v4.new_notebook(),#nb,
+            nb_client=NotebookClient(nb, timeout=timeout),
             timeout=timeout,
             console=Console(),
             interaction=("ipython" if self.is_ipython() else "terminal"),

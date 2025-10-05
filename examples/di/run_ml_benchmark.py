@@ -9,7 +9,7 @@ from metagpt.tools.tool_recommend import TypeMatchToolRecommender
 
 
 # Ensure ML-Benchmark dataset has been downloaded before using these example.
-async def main(task_name, data_dir=DATA_PATH, use_reflection=True):
+async def main(task_name='06_santander_customer', data_dir=DATA_PATH, use_reflection=True):
     if data_dir != DATA_PATH and not os.path.exists(os.path.join(data_dir, "di_dataset/ml_benchmark")):
         raise FileNotFoundError(f"ML-Benchmark dataset not found in {data_dir}.")
 

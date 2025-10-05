@@ -206,7 +206,10 @@ class BaseLLM(ABC):
 
         compressed_message = self.compress_messages(message, compress_type=self.config.compress_type)
         rsp = await self.acompletion_text(compressed_message, stream=stream, timeout=self.get_timeout(timeout))
-        # rsp = await self.acompletion_text(message, stream=stream, timeout=self.get_timeout(timeout))
+        logger.debug(f"LLM回复: {rsp}")
+        while not rsp:
+            logger.warning("LLM回复为空，尝试重新请求")
+            rsp = await self.acompletion_text(compressed_message, stream=stream, timeout=self.get_timeout(timeout))
         return rsp
 
     def _extract_assistant_rsp(self, context):

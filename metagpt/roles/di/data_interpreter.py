@@ -107,6 +107,7 @@ class DataInterpreter(Role):
     async def _write_and_exec_code(self, max_retry: int = 3):
         counter = 0
         success = False
+        again = 0
 
         # plan info
         plan_status = self.planner.get_plan_status() if self.use_plan else ""
@@ -124,7 +125,7 @@ class DataInterpreter(Role):
         # data info
         await self._check_data()
 
-        while not success and counter < max_retry:
+        while (not success and counter < max_retry) or again==1:
             ### write code ###
             code, cause_by = await self._write_code(counter, plan_status, tool_info)
 
@@ -133,6 +134,8 @@ class DataInterpreter(Role):
             ### execute code ###
             result, success = await self.execute_code.run(code)
             print(result)
+            if counter !=0 and success:
+                again += 1
 
             self.working_memory.add(Message(content=result, role="user", cause_by=ExecuteNbCode))
 

@@ -22,16 +22,25 @@ PROMPT_TEMPLATE: str = """
 # Available Task Types:
 {task_type_desc}
 # Task:
-Based on the context, write a plan or modify an existing plan of what you should do to achieve the goal. A plan consists of one to {max_tasks} tasks.
-If you are modifying an existing plan, carefully follow the instruction, don't make unnecessary changes. Give the whole plan unless instructed to modify only one task of the plan.
+Based on the context, write a plan or modify an existing plan of what you should do to achieve the goal. 
+A plan consists of one to {max_tasks} tasks.
+
+If you are modifying an existing plan, carefully follow the instruction, don't make unnecessary changes. 
+Give the whole plan unless instructed to modify only one task of the plan.
 If you encounter errors on the current task, revise and output the current single task only.
+
+For each sub-task, the `instruction` field must clearly include:
+- the **specific file path(s)** involved (if applicable)
+- the **key requirements or constraints** of the task
+
+# Output Format:
 Output a list of jsons following the format:
 ```json
 [
     {{
         "task_id": str = "unique identifier for a task in plan, can be an ordinal",
         "dependent_task_ids": list[str] = "ids of tasks prerequisite to this task",
-        "instruction": "what you should do in this task, one short phrase or sentence.",
+        "instruction": "concise description of the task, explicitly mentioning required file paths and task requirements.",
         "task_type": "type of this task, should be one of Available Task Types.",
     }},
     ...

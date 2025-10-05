@@ -9,7 +9,7 @@ from metagpt.tools.tool_recommend import TypeMatchToolRecommender
 
 
 # Ensure Open-Ended Tasks dataset has been downloaded before using this example.
-async def main(task_name, data_dir=DATA_PATH, use_reflection=True):
+async def main(task_name='17_image_2_code_generation', data_dir=DATA_PATH, use_reflection=True):
     if data_dir != DATA_PATH and not os.path.exists(os.path.join(data_dir, "di_dataset/open_ended_tasks")):
         raise FileNotFoundError(f"Open-ended task dataset not found in {data_dir}.")
 

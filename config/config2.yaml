@@ -22,13 +22,13 @@
 
 llm:
   api_type: 'zhipuai'
-  api_key: '2382f4dbe770f7ba29b5aa7704606bac.G9D8MinPcQooUOtA'
-  model: 'glm-4-flash'
+  api_key: '19f770ab4dc73a41596c386373d34bee.0uZH9b040MlmYQaM'
+  model: 'glm-4.5-flash'
   temperature: 0
 
 models:
  "glm-4-flash": # model: "gpt-4-turbo"  # or gpt-3.5-turbo
     api_type: 'zhipuai'
-    api_key: '2382f4dbe770f7ba29b5aa7704606bac.G9D8MinPcQooUOtA'
-    model: 'glm-4-flash'
+    api_key: '19f770ab4dc73a41596c386373d34bee.0uZH9b040MlmYQaM'
+    model: 'glm-4.5-flash'
     temperature: 0

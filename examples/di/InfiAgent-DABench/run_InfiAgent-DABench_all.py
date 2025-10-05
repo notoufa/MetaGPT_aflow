@@ -11,7 +11,7 @@ async def main():
     """Evaluate all"""
     bench = DABench()
     id_list, predictions, labels, is_true = [], [], [], []
-    for key, value in bench.answers.items():
+    for key, value in list(bench.answers.items())[:5]:
         id_list.append(key)
         labels.append(str(bench.get_answer(key)))
         try:
@@ -19,7 +19,7 @@ async def main():
             di = DataInterpreter()
             result = await di.run(requirement)
             logger.info(result)
-            save_history(role=di)
+            # save_history(role=di)
             temp_prediction, temp_istrue = bench.eval(key, str(result))
             is_true.append(str(temp_istrue))
             predictions.append(str(temp_prediction))
